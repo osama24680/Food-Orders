@@ -3,7 +3,7 @@ import { UilBill, UilBox, UilCheck, UilSmile } from '@iconscout/react-unicons'
 import { client } from "../../lib/client"
 import Image from "next/image"
 import cooking from "../../assets/cooking.png"
-import onWay from "../../assets/onWay.png"
+import onWay from "../../assets/onway.png"
 import spinner from "../../assets/spinner.svg"
 import styles from "../../styles/OrderDetails.module.css"
 import { Accordion } from '@mantine/core';

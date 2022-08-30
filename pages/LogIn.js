@@ -18,7 +18,7 @@ const LogIn = () => {
         <p className={styles.inputError}>{ctx.joiErrors.password && ctx.joiErrors.password}</p>
         <button className={`btn ${styles.FormBtn}`}>{ctx.isLoading ? <Loader color="green" size="sm" /> : `Log In`}</button>
         {ctx.registered && <h3 className={styles.registeredError} style={{ color: "#ff0808d1" }}>{ctx.registered}</h3>}
-        <p>You don't have an account? <Link href="/Register">Register</Link></p>
+        <p>You do not have an account? <Link href="/Register">Register</Link></p>
       </form>
       <div className={styles.formImg}>
         <Image src={s1} alt="" className={styles.formImgLogin}/>

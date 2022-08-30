@@ -1,0 +1,209 @@
+.container {
+
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 2rem
+}
+
+.details {
+    padding: 2rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 1rem;
+}
+
+.table tr td {
+    text-align: center
+}
+
+.tbody>tr>:nth-child(2) {
+    width: 15%;
+
+}
+
+.imgTD>span>img {
+    border-radius: 1rem;
+
+}
+
+.cart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    height: 16rem;
+    padding: 1.6rem;
+    background-color: var(--cartBack);
+    box-shadow: var(--shadow);
+    border-radius: 15px;
+    margin-top: 60px;
+}
+
+.cart span {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.cartDetails {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+
+}
+
+.cartDetails div {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.cartDetails div span {
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
+.buttonsDiv {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.cartButton {
+    width: max-content;
+    padding: .4rem 1rem;
+    border-radius: 4rem;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    background-color: var(--themeRed);
+
+}
+
+.cartButtonGround {
+    background-color: transparent;
+    color: var(--themeRed);
+    border: 2px solid var(--themeRed);
+    font-size: 1.1rem;
+    width: max-content;
+    padding: .4rem 1rem;
+    border-radius: 4rem;
+    cursor: pointer;
+}
+
+.cartButtonDisable {
+    width: max-content;
+    padding: .4rem 1rem;
+    border-radius: 4rem;
+    color: gray;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    background-color: rgb(217, 206, 206);
+}
+
+
+.cartButtonDisabledGround {
+    background-color: transparent;
+    color: gray;
+    border: 2px solid gray;
+    width: max-content;
+    padding: .4rem 1rem;
+    border-radius: 4rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.formContainer input,
+.formContainer textarea {
+    width: 100%;
+    outline: none;
+    padding: 0.8rem;
+    border: 2px solid rgba(213, 213, 213);
+    border-radius: .4rem;
+}
+
+.formContainer span span {
+    font-weight: bold;
+    color: var(--themeRed);
+    font-size: 1.3rem;
+}
+
+.formContainer button {
+    padding: 0.9rem;
+    font-size: 1rem;
+    background-color: rgba(59, 208, 59);
+}
+
+
+@media(max-width:800px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .details {
+        padding: 0;
+    }
+
+    .cart {
+        width: 95%;
+        margin: auto
+    }
+
+    .cartDetails {
+        width: 60%;
+    }
+
+}
+
+
+
+@media(max-width:500px) {
+
+    .details {
+        padding: 0rem;
+    }
+
+    .tbody>tr>:nth-child(1),
+    .thead>tr>:nth-child(1),
+    .tbody>tr>:nth-child(4),
+    .thead>tr>:nth-child(4) {
+        display: none;
+
+    }
+
+    .table {
+        font-size: .7rem;
+
+    }
+
+    .cart {
+        width: 90%;
+        margin: auto
+    }
+
+
+    .cartButton {
+        padding: .4rem .6rem;
+        font-size: .8rem;
+    }
+
+    .cartButtonGround {
+        font-size: .8rem;
+        padding: .4rem .6rem;
+    }
+
+}

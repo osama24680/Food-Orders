@@ -1,0 +1,139 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0rem 1rem;
+    flex-wrap: wrap;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .5rem;
+}
+
+.logo span {
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: .5s;
+
+
+}
+
+.logo span:hover {
+    cursor: pointer;
+    color: red
+}
+
+.logo svg {
+    animation-duration: 1s;
+    animation-name: slidein;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+
+@keyframes slidein {
+    from {
+        margin-left: 0;
+
+    }
+
+    to {
+        margin-left: 100px;
+
+    }
+}
+
+.menu {
+    flex: 1;
+    display: flex;
+    list-style-type: none;
+    gap: 2rem;
+    z-index: 99;
+    justify-content: flex-start;
+
+}
+
+.menu li:hover {
+    cursor: pointer;
+    color: var(--themeRed)
+}
+
+.rightSide {
+    flex: 1;
+    gap: 1rem;
+    display: flex;
+    justify-content: flex-end
+}
+
+.cart {
+    position: relative;
+    display: flex;
+    cursor: pointer;
+    z-index: 99;
+
+}
+
+.badge {
+    position: absolute;
+    display: flex;
+    background-color: var(--themeRed);
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: -.5rem
+}
+
+.Q_badge {
+    position: absolute;
+    display: flex;
+    background-color: green;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 1.4rem;
+    top: 1.4rem
+}
+
+@media(max-width:800px){
+
+    .menu {
+
+        padding-left: .5rem;
+
+    }
+}
+@media(max-width:500px){
+    .logo {
+        justify-content: center;
+        width: 100%;
+        order:-1;
+        padding: 1rem 0 0 0 ;
+    }
+
+    .menu {
+        flex: 2;
+        display: flex;
+        margin-left:0;
+        padding-left: .5rem;
+
+    }
+    .menu li{
+        width: 100%;
+    }
+    .menu li:hover {
+        cursor: pointer;
+        color: var(--themeRed)
+    }
+    
+}

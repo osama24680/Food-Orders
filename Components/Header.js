@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react'
-import Image from "next/image"
-import logo from "../assets/Logo.png"
-import { UilShoppingBag, UilReceipt, UilUtensilsAlt } from '@iconscout/react-unicons'
+import { UilShoppingBag, UilReceipt, UilUtensilsAlt, UilSignInAlt } from '@iconscout/react-unicons'
 import Link from "next/link"
 import styles from "../styles/Header.module.css"
 import { FoodContext } from "../Store/ContextStore"
 import { Collapse } from '@mantine/core';
 import { getCookie, hasCookie } from 'cookies-next';
-import jwtDecode from 'jwt-decode'
+import { useRouter } from 'next/router'
 const Header = () => {
-
+    let router= useRouter()
     let ctx = useContext(FoodContext)
     const [order, setOrder] = useState(null)
     const [userName, setUserName] = useState(null)
@@ -66,7 +64,17 @@ const Header = () => {
                     </div>
 
                 ) :
-                <h1 style={{ color: "var(--themeRed)", textAlign: "center" }}>Welcome to Food Away</h1>
+                <div className={styles.contactUsHeader}>
+                    <div className={styles.contactUs} onClick={()=>{router.push("/LogIn")}}>
+                        <span>Log In</span>
+                        <div >
+                            <UilSignInAlt color="white" className={styles.svfIcon} />
+                        </div>
+                    </div>
+                    <h1 style={{ color: "var(--themeRed)", textAlign: "center" }}>Welcome to Food Away</h1>
+                </div>
+
+
             }
 
         </div>

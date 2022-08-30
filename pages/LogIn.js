@@ -22,12 +22,12 @@ const LogIn = () => {
       </form>
       <div className={styles.formImg}>
         <Image src={s1} alt="" className={styles.formImgLogin}/>
-        <div className={styles.contactUs}>
+        {/* <div className={styles.contactUs}>
           <span>Log In</span>
           <div >
             <UilSignInAlt color="white" className={styles.svfIcon} />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

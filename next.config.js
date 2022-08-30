@@ -1,14 +1,8 @@
-
-module.exports={
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
-  redirects: async () => {
-    return [
-      {
-        source: "/LogIn",
-        destination: "/",
-        parmanent: true,
-      }
-    ]
 
-  }
 }
+
+module.exports = nextConfig
+

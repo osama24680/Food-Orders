@@ -1,0 +1,40 @@
+.marquee {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  background: var(--ink-2);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: slide 38s linear infinite;
+}
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
+.row {
+  display: flex;
+  flex-shrink: 0;
+}
+.row span {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding: 1.1rem 0 1.1rem clamp(1.5rem, 4vw, 3rem);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  white-space: nowrap;
+}
+.row i {
+  font-style: normal;
+  font-size: 0.6em;
+  color: var(--gold);
+}
+
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}

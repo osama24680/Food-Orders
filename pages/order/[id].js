@@ -1,251 +1,98 @@
-import React, { useEffect } from 'react'
-import { UilBill, UilBox, UilCheck, UilSmile } from '@iconscout/react-unicons'
-import { client } from "../../lib/client"
-import Image from "next/image"
-import cooking from "../../assets/cooking.png"
-import onWay from "../../assets/onway.png"
-import spinner from "../../assets/spinner.svg"
+import Head from "next/head"
+import Link from "next/link"
+import { motion } from "motion/react"
 import styles from "../../styles/OrderDetails.module.css"
-import { Accordion } from '@mantine/core';
+import { IconBox, IconCard, IconCheck, IconFlame, IconScooter } from "../../Components/Icons"
+import Reveal from "../../Components/Reveal"
+import { writeClient } from "../../lib/client"
+import { formatPrice } from "../../lib/menu"
 
-// export const getServerSideProps = async ({ params }) => {
-//     const query = `*[_type=='order' && _id== '${params.id}']`
-//     const order = await client.fetch(query)
-//     return {
-//         props: {
-//             order: order[0],
-//             allOrders:order
-//         }
-//     }
-// }
-export const getServerSideProps = async () => {
-    const query = `*[_type=='order' ]`
-    const order = await client.fetch(query)
-    return {
-        props: {
-            order: order[0],
-            allOrders: order,
-            allOrdersLength: order.length
-        }
-    }
+const ease = [0.22, 1, 0.36, 1]
+
+export const getServerSideProps = async ({ params }) => {
+    const order = await writeClient.fetch(`*[_type=="order" && _id == $id][0]`, { id: params.id })
+    if (!order) return { notFound: true }
+    return { props: { order } }
 }
 
+const stepsFor = (order) => [
+    { icon: IconCard, label: "Payment", note: order.method === 0 ? "On delivery" : "Completed", done: order.method !== 0, active: false },
+    { icon: IconFlame, label: "In the kitchen", note: order.status === 1 ? "Being prepared" : "Ready", done: order.status > 1, active: order.status === 1 },
+    { icon: IconScooter, label: "On the way", note: order.status === 2 ? "Heading to you" : order.status > 2 ? "Arrived" : "Coming up", done: order.status > 2, active: order.status === 2 },
+    { icon: IconBox, label: "Delivered", note: order.status >= 3 ? "Enjoy your meal" : "Coming up", done: order.status >= 3, active: false },
+]
 
-const OrderDetails = ({ order, allOrders }) => {
-
-    useEffect(() => {
-        if (order.status >= 3) {
-            localStorage.removeItem("orderID")
-        }
-        localStorage.setItem("orderLength", allOrders.length)
-    }, [])
+const OrderDetails = ({ order }) => {
+    const steps = stepsFor(order)
+    // The line reaches the step that is in progress
+    const progress = Math.min(order.status, steps.length - 1) / (steps.length - 1)
 
     return (
-        <div className={styles.Acc__container}>
+        <div className="pageTop">
+            <Head>
+                <title>Your order | FoodAway</title>
+            </Head>
 
-            {allOrders.map((order, index) => (
-                <Accordion variant="contained" radius="md" defaultValue="customization"  key={index}>
-                    <Accordion.Item value="customization" className={styles.Acc__div} >
-                        <Accordion.Control className={styles.handleData}>
-                            <h3 style={{textAlign: 'center'}}>{order.name}</h3>
-                        </Accordion.Control>
-                        <Accordion.Panel>
-                            <div className={styles.container}>
-                                <span className={styles.heading}>Order in Progress</span>
-                                <div className={styles.details}>
-                                    <div>
-                                        <span>Order Id </span>
-                                        <span>{order._id}</span>
-                                    </div>
-                                    <div>
-                                        <span>Customer Name</span>
-                                        <span>{order.name}</span>
-                                    </div>
-                                    <div>
-                                        <span>Phone</span>
-                                        <span>0{order.phone}</span>
-                                    </div>
+            <motion.header
+                className={styles.head}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, ease }}
+            >
+                <span className="eyebrow">Order in progress</span>
+                <h1>Thank you, <em>{order.name}.</em></h1>
+                <p>Order ref. <code>{order._id.slice(-12)}</code></p>
+            </motion.header>
 
-                                    <div>
-                                        <span>Method </span>
-                                        <span>
-                                            {
-                                                order.method === 0 ? "Cash on Delivery" : "Online Payment (done)"
-                                            }
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>Total</span>
-                                        {order.total? <span> $ {order.total}</span> : <b>Done</b>} 
-                                    </div>
-                                </div>
-                                <div className={styles.statusContainer}>
-                                    <div className={styles.status}>
-                                        <UilBill width={50} height={50} fill="#F54748" />
-                                        <span >Payment</span>
-                                        {order.method === 0 ?
-                                            <span className={styles.pending}>On Delivery</span>
-                                            :
-                                            <span className={styles.completed}>Completed</span>
-                                        }
-                                    </div>
-
-                                    <div className={styles.status}>
-                                        <Image src={cooking} alt="" width={50} height={50} />
-                                        <span>Cooking</span>
-                                        {order.status === 1 &&
-                                            <div className={styles.spinner}>
-                                                <Image src={spinner} alt="" />
-                                            </div>
-                                        }
-                                        {order.status > 1 &&
-                                            <div className={styles.completed}>
-                                                <UilCheck />
-                                                <span >Completed </span>
-                                            </div>
-                                        }
-                                    </div>
-
-
-                                    <div className={styles.status}>
-                                        <Image src={onWay} alt="" width={50} height={50} />
-                                        <span>OnWay</span>
-                                        {order.status === 2 &&
-                                            <div className={styles.spinner}>
-                                                <Image src={spinner} alt="" />
-                                            </div>
-                                        }
-                                        {order.status > 2 &&
-                                            <div className={styles.completed}>
-                                                <UilCheck />
-                                                <span >Completed </span>
-                                            </div>
-                                        }
-                                    </div>
-
-
-                                    <div className={styles.status}>
-                                        <UilBox width={50} height={50} fill="#F54748" />
-                                        <span>Deliverd</span>
-                                        {order.status >= 3 &&
-
-                                            <div>
-                                                <div className={styles.spinner}>
-                                                    <Image src={spinner} alt="" />
-                                                </div>
-                                                <div className={styles.completed}>
-                                                    <span >#Enjoy_Your_Meal </span>
-                                                    <UilSmile />
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-
-                        </Accordion.Panel>
-                    </Accordion.Item>
-                </Accordion>
-            ))}
-
-
-            {/* <div className={styles.allOrders}>
-                {allOrders.map((order, index) => (
-                    <div className={styles.container} key={index}>
-                        <span className={styles.heading}>Order in Progress</span>
-                        <div className={styles.details}>
-                            <div>
-                                <span>Order Id </span>
-                                <span>{order._id}</span>
-                            </div>
-                            <div>
-                                <span>Customer Name</span>
-                                <span>{order.name}</span>
-                            </div>
-                            <div>
-                                <span>Phone</span>
-                                <span>0{order.phone}</span>
-                            </div>
-
-                            <div>
-                                <span>Method </span>
-                                <span>
-                                    {
-                                        order.method === 0 ? "Cash on Delivery" : "Online Payment (done)"
-                                    }
-                                </span>
-                            </div>
-                            <div>
-                                <span>Total</span>
-                                <span> $ {order.total}</span>
-                            </div>
-                        </div>
-                        <div className={styles.statusContainer}>
-                            <div className={styles.status}>
-                                <UilBill width={50} height={50} fill="#F54748" />
-                                <span >Payment</span>
-                                {order.method === 0 ?
-                                    <span className={styles.pending}>On Delivery</span>
-                                    :
-                                    <span className={styles.completed}>Completed</span>
-                                }
-                            </div>
-
-                            <div className={styles.status}>
-                                <Image src={cooking} alt="" width={50} height={50} />
-                                <span>Cooking</span>
-                                {order.status === 1 &&
-                                    <div className={styles.spinner}>
-                                        <Image src={spinner} alt="" />
-                                    </div>
-                                }
-                                {order.status > 1 &&
-                                    <div className={styles.completed}>
-                                        <UilCheck />
-                                        <span >Completed </span>
-                                    </div>
-                                }
-                            </div>
-
-
-                            <div className={styles.status}>
-                                <Image src={onWay} alt="" width={50} height={50} />
-                                <span>OnWay</span>
-                                {order.status === 2 &&
-                                    <div className={styles.spinner}>
-                                        <Image src={spinner} alt="" />
-                                    </div>
-                                }
-                                {order.status > 2 &&
-                                    <div className={styles.completed}>
-                                        <UilCheck />
-                                        <span >Completed </span>
-                                    </div>
-                                }
-                            </div>
-
-
-                            <div className={styles.status}>
-                                <UilBox width={50} height={50} fill="#F54748" />
-                                <span>Deliverd</span>
-                                {order.status >= 3 &&
-
-                                    <div>
-                                        <div className={styles.spinner}>
-                                            <Image src={spinner} alt="" />
-                                        </div>
-                                        <div className={styles.completed}>
-                                            <span >#Enjoy_Your_Meal </span>
-                                            <UilSmile />
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
+            <div className={styles.timeline} style={{ "--progress": progress }}>
+                <motion.div
+                    className={styles.line}
+                    initial={{ scaleX: 0, scaleY: 0 }}
+                    animate={{ scaleX: 1, scaleY: 1 }}
+                    transition={{ duration: 1.5, delay: 0.4, ease }}
+                    aria-hidden="true"
+                />
+                {steps.map((step, index) => (
+                    <motion.div
+                        key={step.label}
+                        className={styles.step}
+                        data-done={step.done}
+                        data-active={step.active}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.25 + index * 0.13, ease }}
+                    >
+                        <div className={styles.dot}>{step.done ? <IconCheck size={22} /> : <step.icon size={22} />}</div>
+                        <strong>{step.label}</strong>
+                        <span>{step.note}</span>
+                    </motion.div>
                 ))}
-            </div> */}
+            </div>
 
+            <Reveal className={styles.card}>
+                <dl className={styles.details}>
+                    <div><dt>Customer</dt><dd>{order.name}</dd></div>
+                    <div><dt>Phone</dt><dd>0{order.phone}</dd></div>
+                    {order.address && <div><dt>Address</dt><dd>{order.address}</dd></div>}
+                    <div><dt>Method</dt><dd>{order.method === 0 ? "Cash on delivery" : "Paid online"}</dd></div>
+                    {order.total !== undefined && <div><dt>Total</dt><dd className={styles.total}>${formatPrice(order.total)}</dd></div>}
+                </dl>
+
+                {order.items?.length > 0 && (
+                    <ul className={styles.items}>
+                        {order.items.map((item) => (
+                            <li key={item._key}>
+                                <span>{item.quantity} × {item.name} <small>{item.size}</small></span>
+                                <span>${formatPrice(item.price * item.quantity)}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </Reveal>
+
+            <div className={styles.back}>
+                <Link href="/#menu" className="btn btnGhost">Back to the menu</Link>
+            </div>
         </div>
     )
 }

@@ -1,43 +1,49 @@
-import React from 'react'
-import styles from "../styles/Services.module.css"
-import s1 from "../assets/s1.png"
-import s2 from "../assets/s2.png"
-import s3 from "../assets/s3.png"
+import { useRef } from "react"
 import Image from "next/image"
-const Services = () => {
-    return (
-        <>
-            <div className={styles.heading}>
-                <span>WHAT WE SERVE</span>
-                <span>YOUR FAVOURIT FOOD</span>
-                <span>DELIVERY PARTNERFOOD</span>
+import { motion, useScroll, useTransform } from "motion/react"
+import styles from "../styles/Services.module.css"
+import ritual1 from "../assets/ritual-1.webp"
+import ritual2 from "../assets/ritual-2.webp"
+import ritual3 from "../assets/ritual-3.webp"
+import Reveal from "./Reveal"
 
+const STEPS = [
+    { image: ritual1, title: "Choose", text: "A few steps are all it takes. Pick a dish, pick a size, and we take it from there." },
+    { image: ritual2, title: "We fire it", text: "Made fresh the moment you order. Nothing waits under a lamp, nothing leaves lukewarm." },
+    { image: ritual3, title: "At your door", text: "Delivery that always arrives on time, often sooner, and never costs you a thing." },
+]
+
+const Step = ({ step, index }) => {
+    const ref = useRef(null)
+    const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
+    const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"])
+
+    return (
+        <Reveal delay={index * 0.12} className={styles.step}>
+            <div className={styles.arch} ref={ref}>
+                <motion.div className={styles.photo} style={{ y }}>
+                    <Image src={step.image} alt="" fill sizes="(max-width: 820px) 90vw, 30vw" placeholder="blur" />
+                </motion.div>
+                <span className={styles.number}>{index + 1}</span>
             </div>
-            <div className={styles.services}>
-                <div className={styles.feature}>
-                    <div className={styles.imgWrapper}>
-                        <Image src={s1} alt="" objectFit="cover" layout="intrinsic" />
-                    </div>
-                    <span>Easy to order</span>
-                    <span>You only need a few steps in food ordering</span>
-                </div>
-                <div className={styles.feature}>
-                    <div className={styles.imgWrapper}>
-                        <Image src={s2} alt="" objectFit="cover" layout="intrinsic" />
-                    </div>
-                    <span>Easy to order</span>
-                    <span>Delivery that is always on time even fatser</span>
-                </div>
-                <div className={styles.feature}>
-                    <div className={styles.imgWrapper}>
-                        <Image src={s3} alt="" objectFit="cover" layout="intrinsic" />
-                    </div>
-                    <span>Easy to order</span>
-                    <span>Not only fast for us, it is also number one</span>
-                </div>           
-                 </div>
-        </>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+        </Reveal>
     )
 }
+
+const Services = () => (
+    <section id="ritual" className={styles.section}>
+        <Reveal className={styles.heading}>
+            <span className="eyebrow">The ritual</span>
+            <h2>Your favourite food, <em>delivered like an occasion.</em></h2>
+        </Reveal>
+        <div className={styles.steps}>
+            {STEPS.map((step, index) => (
+                <Step key={step.title} step={step} index={index} />
+            ))}
+        </div>
+    </section>
+)
 
 export default Services

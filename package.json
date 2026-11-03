@@ -1,38 +1,29 @@
 {
   "name": "food",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/server": "^11.10.0",
-    "@iconscout/react-unicons": "^1.1.6",
-    "@mantine/core": "^5.2.3",
-    "@mantine/hooks": "^5.2.3",
-    "@mantine/next": "^5.2.3",
-    "@sanity/client": "^3.3.3",
-    "@sanity/image-url": "^1.0.1",
-    "axios": "^0.27.2",
-    "cookies-next": "^2.1.1",
-    "firebase": "^9.9.3",
-    "joi": "^17.6.0",
-    "jwt-decode": "^3.1.2",
-    "next": "12.2.5",
-    "next-auth": "^4.10.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-hot-toast": "^2.3.0",
-    "react-icons": "^4.4.0",
-    "stripe": "^10.5.0",
-    "zustand": "^4.1.1"
+    "@iconscout/react-unicons": "^2.2.5",
+    "@sanity/client": "^8.14.1",
+    "@sanity/image-url": "^2.1.1",
+    "axios": "^1.21.0",
+    "joi": "^18.3.1",
+    "motion": "^14.9.0",
+    "next": "16.4.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hot-toast": "^2.6.1",
+    "stripe": "^23.1.0",
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
-    "eslint": "8.22.0",
-    "eslint-config-next": "12.2.5"
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.4.5"
   }
 }

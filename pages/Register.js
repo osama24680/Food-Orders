@@ -1,40 +1,49 @@
-import React, { useContext } from 'react'
-import styles from "../styles/SignUp.module.css"
-import { Loader } from '@mantine/core';
-import s2 from "../assets/s2.png"
-import Image from "next/image"
-import { UilRegistered } from '@iconscout/react-unicons'
-import Link from 'next/link'
-import { FoodContext } from "../Store/ContextStore"
+import { useEffect } from "react"
+import Head from "next/head"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import styles from "../styles/Auth.module.css"
+import AuthShell from "../Components/AuthShell"
+import Field from "../Components/Field"
+import { IconArrow, IconSpinner } from "../Components/Icons"
+import { schemas, useForm } from "../lib/authForm"
+import { useAuth } from "../Store/useAuth"
+
 const Register = () => {
-    let ctx = useContext(FoodContext)
+    const router = useRouter()
+    const signup = useAuth((state) => state.signup)
+    const token = useAuth((state) => state.token)
+    const form = useForm()
+    const { next } = router.query
+    const nextQuery = next ? `next=${encodeURIComponent(next)}` : ""
+
+    useEffect(() => {
+        if (token) router.replace("/")
+    }, [router, token])
+
+    const onSubmit = form.submit(schemas.signup, async (values) => {
+        await signup(values)
+        router.push(`/login?registered=1${nextQuery && `&${nextQuery}`}`)
+    })
+
     return (
-        <div className={styles.container}>
-            <form className={styles.formContainer} onSubmit={(e) => ctx.handleSubmit(e,"register")}>
-                <input onChange={ctx.handleInput} type="text" name="first_name" placeholder='First Name' />
-                <p className={styles.inputError}>{ctx.joiErrors.first_name && ctx.joiErrors.first_name}</p>
-                <input onChange={ctx.handleInput} type="text" name="last_name" placeholder='Last Name' />
-                <p className={styles.inputError}>{ctx.joiErrors.last_name && ctx.joiErrors.last_name}</p>
-                <input onChange={ctx.handleInput} type="number" name="age" placeholder='Age' />
-                <p className={styles.inputError}>{ctx.joiErrors.age && ctx.joiErrors.age}</p>
-                <input onChange={ctx.handleInput} type="email" name="email" placeholder='Email' />
-                <p className={styles.inputError}>{ctx.joiErrors.email && ctx.joiErrors.email}</p>
-                <input onChange={ctx.handleInput} type="password" name="password" placeholder='Password' />
-                <p className={styles.inputError}>{ctx.joiErrors.password && ctx.joiErrors.password}</p>
-                <button className={`btn ${styles.FormBtn}`}>{ctx.isLoading ? <Loader color="green" size="sm" /> : `Confirm`}</button>
-                {ctx.registered && <h3 className={styles.registeredError} style={{ color: "#ff0808d1" }}>{ctx.registered}</h3>}
-                <p>You have an account? <Link href="/LogIn">Log In</Link></p>
+        <AuthShell eyebrow="Join us" title={<>Pull up <em>a chair.</em></>} subtitle="One account for your orders, your address and your favourites.">
+            <Head>
+                <title>Create an account | FoodAway</title>
+            </Head>
+            <form className={styles.form} onSubmit={onSubmit} noValidate>
+                <Field form={form} name="name" label="Name" autoComplete="name" />
+                <Field form={form} name="email" label="Email" type="email" autoComplete="email" />
+                <Field form={form} name="phone" label="Phone (01xxxxxxxxx)" type="tel" autoComplete="tel" />
+                <Field form={form} name="password" label="Password" type="password" autoComplete="new-password" />
+                <Field form={form} name="rePassword" label="Confirm password" type="password" autoComplete="new-password" />
+                {form.apiError && <p className="formError" role="alert">{form.apiError}</p>}
+                <button type="submit" className="btn" disabled={form.isLoading}>
+                    {form.isLoading ? <IconSpinner size={18} /> : <>Create account <IconArrow size={18} /></>}
+                </button>
             </form>
-            <div className={styles.formImg}>
-                <Image src={s2} alt="" />
-                <div className={styles.contactUs}>
-                    <span>Register</span>
-                    <div >
-                        <UilRegistered color="white" />
-                    </div>
-                </div>
-            </div>
-        </div>
+            <p className={styles.switch}>Already have an account? <Link href={`/login${nextQuery && `?${nextQuery}`}`}>Log in</Link></p>
+        </AuthShell>
     )
 }
 
